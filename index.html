@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Welcome, Madam Sahiba</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{--gold:#f3e2b4;--cream:#fff6e2;--ink:#1a0d10;--serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--ink);color:var(--cream);font-family:var(--sans);overflow:hidden}
+#c,#c canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.ui{position:fixed;left:0;right:0;z-index:3;text-align:center;pointer-events:none}
+#top{top:calc(10px + env(safe-area-inset-top,0px));font-size:12px;font-weight:500;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;text-shadow:0 1px 3px #000,0 0 12px #000}
+#bar{display:flex;gap:4px;justify-content:center;margin-top:8px}#bar i{width:26px;height:2px;background:#ffffff55}#bar i.on{background:var(--gold)}
+#mid{top:0;padding:calc(64px + env(safe-area-inset-top,0px)) 22px 50px;background:linear-gradient(#000000b8,#00000070 65%,transparent)}
+#mid h1{font:600 40px/1.05 var(--serif);color:#fff;text-shadow:0 1px 3px #000,0 0 18px #000}
+#mid p{font:italic 600 22px var(--serif);color:#fff6e2;margin-top:8px;text-shadow:0 1px 3px #000,0 0 14px #000}
+#nav{bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;justify-content:center;pointer-events:auto}
+button{font:500 14px var(--sans);color:var(--ink);background:var(--gold);border:0;border-radius:99px;padding:12px 24px;cursor:pointer}
+button.g{background:#1a0d10aa;color:var(--gold);border:1px solid var(--gold)}
+button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#menu{display:none;top:46%;padding:0 26px;pointer-events:auto}
+#menu button{display:block;width:100%;max-width:320px;margin:0 auto 10px;text-align:left;background:#1a0d10cc;color:var(--cream);border:1px solid #d8b46a99;border-radius:4px;font:20px var(--serif);padding:12px 16px}
+#menu small{display:block;font:italic 14px var(--sans);opacity:.7}
+#card{display:none;bottom:92px;padding:0 20px}
+#card div{max-width:340px;margin:auto;background:#150a0dee;border:1px solid #d8b46a66;display:flex;gap:12px;text-align:left;padding:10px}
+#card canvas{width:70px;height:93px;flex:none}
+#card small{color:var(--gold);letter-spacing:.2em;font-size:10px}#card b{display:block;font:600 22px var(--serif)}#card i{font:italic 16px/1.3 var(--serif)}
+.ov{position:fixed;inset:0;z-index:6;background:#120709f2;display:none;overflow:auto;padding:60px 26px 100px;text-align:left}
+.ov.on{display:block}
+.ov h2{font:400 32px var(--serif);color:var(--gold);margin-bottom:14px}
+.ov li{list-style:none;margin-bottom:16px;font:19px/1.35 var(--serif)}.ov li b{display:block;font-size:22px}.ov li span{opacity:.8}
+.ov .x{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%)}
+#fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .6s;z-index:5}
+#selfie{text-align:center}
+#selfie video,#selfie img{width:100%;max-width:340px;border-radius:6px;background:#000;transform:scaleX(-1)}
+#selfie img{transform:none}
+#load{position:fixed;inset:0;z-index:9;background:#151215;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .8s}#load small{color:var(--gold);letter-spacing:.3em;font-size:12px}#load i{font:italic 24px var(--serif)}#load u{display:block;height:1px;background:var(--gold);width:0;animation:ln 2s forwards}@keyframes ln{to{width:190px}}
+#inv{top:22%;padding:0 24px;display:none;color:#fff}#inv small{display:block;letter-spacing:.35em;font-size:12px;opacity:.9;text-shadow:0 1px 6px #0008}#inv i{display:block;font:italic 22px var(--serif);margin-top:18px;opacity:.9;text-shadow:0 1px 8px #0008}#inv h1{font:400 54px/1 var(--serif);margin:6px 0 18px;text-shadow:0 2px 16px #0009}#inv p{font:400 17px var(--sans);opacity:.95;text-shadow:0 1px 8px #0009}
+#mid.bot{top:auto;bottom:calc(100px + env(safe-area-inset-bottom,0px));padding:0 22px;background:none}
+#ex{letter-spacing:.18em;text-transform:uppercase;font-size:12px;background:#1a0d10cc;color:var(--cream);border:1px solid #fff6;border-radius:6px;padding:14px 26px}
+#cnt{position:absolute;left:0;right:0;top:36%;font:400 90px var(--serif);text-align:center}
+</style></head><body>
+<div id="load"><small>THE SAHIBA REGENCY</small><i>Preparing your palace...</i><u></u></div><div id="c"></div><div id="fade"></div>
+<div class="ui" id="top"><div id="ttl"></div><div id="bar"></div></div>
+<div class="ui" id="mid"><h1 id="h"></h1><p id="p"></p></div>
+<div class="ui" id="inv"><small>AN INVITATION</small><i>Her Royal Highness</i><h1>Princess<br>Madam Sahiba</h1><p>A special evening awaits.</p></div>
+<div class="ui" id="menu">
+<button data-g="2">I &nbsp;The Royal Gallery<small>Pictures of us</small></button>
+<button data-g="3">II &nbsp;The Grand Ballroom<small>A few words for you</small></button>
+<button data-g="4">III &nbsp;The Rose Garden<small>Something waiting for you</small></button></div>
+<div class="ui" id="card"><div><canvas id="mc" width="300" height="400"></canvas><span><small id="mn"></small><b id="mt"></b><i id="mx"></i></span></div></div>
+<div class="ui" id="nav"><button class="g" id="bk">Back</button><button id="nx">Next</button><button id="ex" style="display:none"></button></div>
+<div class="ov" id="letter"><h2>What I admire in you</h2><ol style="padding:0">
+<li><b>Your smile</b><span>It makes an ordinary day feel special.</span></li>
+<li><b>Your creativity</b><span>The way your mind works never ceases to amaze me.</span></li>
+<li><b>Your determination</b><span>When you care about something, you put your whole heart into it.</span></li>
+<li><b>The little things</b><span>Your silly moments and tiny quirks are my favourite part of spending time with you.</span></li>
+<li><b>Your heart</b><span>Beneath everything, it is the thing I admire most.</span></li></ol>
+<button class="x" id="lx">Back to the ballroom</button></div>
+<div class="ov" id="love"><h2>For you, Madam Sahiba</h2><p style="font:21px/1.5 var(--serif)">My dear Madam Sahiba,<br><br>Today is yours. Every little thing in this garden is here to remind you how special you are.<br><br>Thank you for the laughter, the patience and the love you give so easily. You are my favourite person, today and always.<br><br><i>Happy Princess Day.<br>Yours, always.</i></p><button class="x" id="lv">Back to the garden</button></div><div class="ov" id="selfie"><h2>Her Royal Highness</h2><img id="gl" alt="Madam Sahiba wearing a crown" style="width:100%;max-width:320px;border:3px solid var(--gold);border-radius:6px"><p style="font:italic 20px var(--serif);margin:12px 0">Madam Sahiba, crowned for her day.</p><button class="x" id="sx">Close</button></div>
+<script>
+var $=function(i){return document.getElementById(i)};
+var W=innerWidth,H=innerHeight,M=Math;
+var R=new THREE.WebGLRenderer({antialias:true});R.setSize(W,H);R.setPixelRatio(M.min(devicePixelRatio,2));$('c').appendChild(R.domElement);
+var S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(62,W/H,.1,300);
+addEventListener('resize',function(){W=innerWidth;H=innerHeight;R.setSize(W,H);cam.aspect=W/H;cam.updateProjectionMatrix()});
+S.add(new THREE.AmbientLight(0xffffff,.75));
+var mats={};
+function mat(c,t){var k=c+(t||'');return mats[k]||(mats[k]=t=='g'?new THREE.MeshPhongMaterial({color:c,shininess:90,specular:0xffeeaa,emissive:0x18120a}):t=='e'?new THREE.MeshBasicMaterial({color:c}):new THREE.MeshLambertMaterial({color:c}))}
+function box(w,h,d,c,x,y,z,t){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c,t));m.position.set(x,y,z);S.add(m);return m}
+function cyl(a,b,h,c,x,y,z,t,s){var m=new THREE.Mesh(new THREE.CylinderGeometry(a,b,h,s||24),mat(c,t));m.position.set(x,y,z);S.add(m);return m}
+function sph(r,c,x,y,z,t){var m=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),mat(c,t));m.position.set(x,y,z);S.add(m);return m}
+function plane(w,h,map,x,y,z,rx){var m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshLambertMaterial({map:map}));m.position.set(x,y,z);m.rotation.x=rx||0;S.add(m);return m}
+function cv(w,h,f){var c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c}
+function tex(c,rx,ry){var t=new THREE.CanvasTexture(c);if(rx){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry)}return t}
+function light(c,i,x,y,z){var l=new THREE.PointLight(c,i,70);l.position.set(x,y,z);S.add(l);return l}
+var gold=0xeed9a0;
+function chk(a,b){return tex(cv(128,128,function(x){x.fillStyle=a;x.fillRect(0,0,128,128);x.fillStyle=b;x.fillRect(0,0,64,64);x.fillRect(64,64,64,64)}),12,12)}
+function room(ox,wall,floor){plane(60,60,floor,ox,0,0,-M.PI/2);box(60,1,60,0x2a1a14,ox,15,0);
+box(60,16,1,wall,ox,7.5,-16);box(1,16,40,wall,ox-16,7.5,0);box(1,16,40,wall,ox+16,7.5,0);box(60,16,1,wall,ox,7.5,20)}
+/* pictures drawn as illustrations */
+function art(i){return cv(300,400,function(x){var P=[['#f6b68a','#8d3b5a'],['#9ec5e8','#f3d6a4'],['#c9a0dc','#fbd1b0'],['#f7c6d4','#7a3b6e'],['#a8d8c8','#f2e2a8'],['#ffb88a','#5a4a8a']][i%6],g=x.createLinearGradient(0,0,0,400);g.addColorStop(0,P[0]);g.addColorStop(1,P[1]);x.fillStyle=g;x.fillRect(0,0,300,400);
+x.fillStyle='#ffffff99';x.beginPath();x.arc(60+i*38,85,36,0,7);x.fill();x.fillStyle='#2a1018';
+[[112,240,36],[182,252,32]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],p[2],0,7);x.fill();x.fillRect(p[0]-p[2]-14,p[1]+p[2]-6,2*p[2]+28,150)});
+x.fillStyle='#ff6b81';x.font='34px serif';x.fillText('\u2665',138,200);x.font='20px serif';x.fillText('\u2665',60,120);x.fillText('\u2665',230,170)})}
+var arts=[0,1,2,3,4,5].map(art);
+/* ROOM 0 entrance */
+room(0,0x9a6b46,chk('#6e4a30','#5a3b26'));light(0xfff0dc,1,0,9,6);
+box(14,12,.6,0x8a5c3a,0,6,-10);box(10.6,10.4,.4,0x3a2414,0,5.2,-9.7);box(13,.7,1,0x5a3a22,0,11,-9.4);
+plane(7.6,8.6,tex(cv(4,4,function(x){x.fillStyle='#6a4a30';x.fillRect(0,0,4,4)})),0,4.4,-9.45);
+var dl=new THREE.Group(),dr=new THREE.Group();dl.position.set(-3.8,0,-9.3);dr.position.set(3.8,0,-9.3);S.add(dl,dr);
+[[dl,1.9],[dr,-1.9]].forEach(function(a){var g=a[0],o=a[1];function pb(w,h,y,c,z){var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.12),mat(c));m.position.set(o,y,z);g.add(m)}
+var d=new THREE.Mesh(new THREE.BoxGeometry(3.8,8.6,.3),mat(0xe6d3b0));d.position.set(o,4.3,0);g.add(d);
+pb(3,3.9,5.7,0x3a2414,.16);pb(2.74,3.64,5.7,0xe9d8b6,.19);pb(3,2.9,2.1,0x3a2414,.16);pb(2.74,2.64,2.1,0xe9d8b6,.19);
+var k=new THREE.Mesh(new THREE.SphereGeometry(.17,10,8),mat(0x3a2414));k.position.set(o>0?3.3:-3.3,4.2,.3);g.add(k)});
+var cr=new THREE.Mesh(new THREE.TorusGeometry(1,.1,8,32),mat(0x4a2e18));cr.position.set(0,9.6,-9.4);S.add(cr);sph(.25,0x2a1810,0,9.6,-9.3);
+[-7.2,7.2].forEach(function(x){sph(.55,0xf6ecd4,x,5.8,-9.2,'e');cyl(.2,.55,.5,0x1a1010,x,6.6,-9.2);light(0xfff0d0,.5,x,6,-6)});
+var doorOpen=false,doorT=0;
+/* ROOM 1 hall */
+room(100,0xe6d3a4,chk('#1a0d10','#f3e6c8'));light(0xffe2a0,1.2,100,10,4);
+for(var k=0;k<9;k++)box(5,.55*(k+1),1.3,0x6a1424,100,.275*(k+1),4-k*1.3);
+[-3.2,3.2].forEach(function(x){box(.4,.8,12,gold,100+x,1.8,-1,'g');for(var k=0;k<9;k++)box(.2,1,.2,gold,100+x,.6*(k+1)*.55+.3,4-k*1.3,'g')});
+box(6,9,.5,0x1a0d10,100,9,-9);var ar=new THREE.Mesh(new THREE.TorusGeometry(3,.25,8,24,M.PI),mat(gold,'g'));ar.position.set(100,13,-8.7);S.add(ar);
+[-9,9].forEach(function(x){box(3,8,.2,0xfff1c8,100+x,7,-15.4,'e')});
+/* ROOM 2 gallery */
+room(200,0x4a0f1c,tex(cv(8,8,function(x){x.fillStyle='#3a2410';x.fillRect(0,0,8,8)})));light(0xffe0a0,1.4,200,9,2);
+box(8.4,10.4,.5,gold,200,5.6,-14.6,'g');var gm=new THREE.MeshLambertMaterial({map:tex(arts[0])}),gp=new THREE.Mesh(new THREE.PlaneGeometry(7,9),gm);gp.position.set(200,5.6,-14.3);S.add(gp);
+var gc=new THREE.Mesh(new THREE.TorusGeometry(.8,.12,8,24),mat(gold,'g'));gc.position.set(200,11.3,-14.4);S.add(gc);
+/* ROOM 3 ballroom */
+room(300,0xe9d6a8,tex(cv(256,256,function(x){x.fillStyle='#a8763a';x.fillRect(0,0,256,256);for(var i=0;i<16;i++){x.fillStyle=i%2?'#c28d4c':'#8c5e2c';x.fillRect(i*16,0,14,256)}x.strokeStyle='#5a3a18';x.lineWidth=4;x.beginPath();x.arc(128,128,100,0,7);x.stroke()}),3,3));light(0xffe0a0,1.6,300,9,0);
+for(var i=-2;i<=2;i++)box(3,6,.1,0xc8ac72,300+i*5.2,7,-15.4);
+var ch=new THREE.Group();ch.position.set(300,10.5,-2);S.add(ch);[[2.4,0],[1.6,1.2],[.9,2.4]].forEach(function(a,i){var t=new THREE.Mesh(new THREE.TorusGeometry(a[0],.1,8,32),mat(gold,'g'));t.rotation.x=M.PI/2;t.position.y=-a[1];ch.add(t);for(var k=0;k<16;k++){var b=new THREE.Mesh(new THREE.SphereGeometry(.14,8,6),mat(0xfff3c4,'e')),q=k/16*M.PI*2;b.position.set(M.cos(q)*a[0],-a[1]+.25,M.sin(q)*a[0]);ch.add(b)}});
+var cc=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,4),mat(gold,'g'));cc.position.y=2;ch.add(cc);
+box(1.2,2.2,.8,0x2a1710,300,1.1,2.2);box(5,2.8,.15,gold,300,3.2,2.55,'g');
+var plc=cv(512,280,function(){}),plt=new THREE.CanvasTexture(plc);
+function drawPl(){var x=plc.getContext('2d');x.fillStyle='#1a0d10';x.fillRect(0,0,512,280);x.strokeStyle='#f3e2b4';x.lineWidth=4;x.strokeRect(14,14,484,252);x.fillStyle='#fff6e2';x.textAlign='center';x.font='italic 600 46px "Cormorant Garamond",Georgia,serif';x.fillText('A little kingdom,',256,110);x.fillText('made for one very',256,164);x.fillText('special girl.',256,218);plt.needsUpdate=true}
+drawPl();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(drawPl);
+plane(4.6,2.4,plt,300,3.2,2.65);
+/* ROOM 4 garden */
+var gx=400;
+var bgG=tex(cv(2,256,function(x,w,h){var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#8a5b86');g.addColorStop(.55,'#e88f6a');g.addColorStop(1,'#f6c58a');x.fillStyle=g;x.fillRect(0,0,w,h)}));S.background=bgG;
+plane(300,300,tex(cv(4,4,function(x){x.fillStyle='#4f5e22';x.fillRect(0,0,4,4)})),gx,-.01,-60,-M.PI/2);
+plane(7,90,chk('#d9cfa8','#3a4818'),gx,0,-35,-M.PI/2).material.map.repeat.set(3,18);
+light(0xffc89a,1.2,gx,14,6);var sun=new THREE.DirectionalLight(0xffb878,.5);sun.position.set(gx,10,-20);S.add(sun);
+for(var k=0;k<7;k++)[-13,13].forEach(function(s){box(3,4.2,4,0x2f4a1a,gx+s,2.1,2-k*7);for(var j=0;j<3;j++)sph(.25,j%2?0xc3243d:0xe0475e,gx+s*.88,1+j*1.1,2-k*7+1.2)});
+var fac=tex(cv(512,128,function(x,w,h){x.fillStyle='#d6c4a0';x.fillRect(0,0,w,h);x.fillStyle='#4a3a30';for(var i=0;i<22;i++)for(var j=0;j<3;j++)x.fillRect(12+i*22,12+j*36,10,22)}));
+plane(46,9,fac,gx,4.5,-62).material.side=2;box(46,3,6,0x3a3438,gx,10,-62);box(12,12,6,0xd6c4a0,gx,6,-60);
+cyl(3,3.3,.5,0xe8d9b8,gx,.25,-6);cyl(.35,.5,2.4,0xe8d9b8,gx,1.5,-6);cyl(1.6,.5,.35,0xe8d9b8,gx,2.7,-6);cyl(.12,.12,1.2,0xe8d9b8,gx,3.5,-6);sph(.3,0xe8d9b8,gx,4.2,-6);
+var dp=new THREE.BufferGeometry(),da=new Float32Array(150),dv=[];for(var i=0;i<50;i++){da[i*3]=gx;da[i*3+1]=4;da[i*3+2]=-6;dv.push([(M.random()-.5)*.06,M.random()*.1,(M.random()-.5)*.06,M.random()])}
+dp.setAttribute('position',new THREE.BufferAttribute(da,3));S.add(new THREE.Points(dp,new THREE.PointsMaterial({color:0xcfeaff,size:.25})));
+var tx=gx+9;cyl(2.2,2.2,.2,0xf6efe0,tx,2,-8);cyl(.3,.3,2,0xf6efe0,tx,1,-8);cyl(1.2,1.2,.1,0xf6efe0,tx,.05,-8);
+[-1,1].forEach(function(s){cyl(.15,.15,.8,0xfff3c4,tx+s*1,2.5,-8);sph(.12,0xffa840,tx+s*1,3,-8,'e')});sph(.35,0xc3243d,tx,2.4,-8);sph(.28,0xe0475e,tx+.3,2.3,-8.2);
+var cx=gx+4;var ev=box(1.5,.05,1.05,0xfff4dc,tx-.3,2.13,-7.6);ev.rotation.y=.3;sph(.14,0xc3243d,tx-.3,2.2,-7.6);box(2.2,2,2.2,0xf2ead8,cx,1,-8);cyl(1,1,.4,0x7a1022,cx,2.2,-8);
+var cw=new THREE.Mesh(new THREE.CylinderGeometry(.8,.7,.5,24,1,true),mat(0xdfe6f0,'g'));cw.position.set(cx,2.7,-8);cw.material.side=2;S.add(cw);
+for(var k=0;k<9;k++){var q=k/9*M.PI*2,c=new THREE.Mesh(new THREE.ConeGeometry(.12,.6+(k%2)*.4,6),mat(0xdfe6f0,'g'));c.position.set(cx+M.cos(q)*.75,3.2,-8+M.sin(q)*.75);S.add(c);sph(.07,0xffffff,cx+M.cos(q)*.75,3.6+(k%2)*.4,-8+M.sin(q)*.75,'e')}
+var pe=new THREE.BufferGeometry(),pa=new Float32Array(240);for(var i=0;i<80;i++){pa[i*3]=gx+(M.random()-.5)*30;pa[i*3+1]=M.random()*18;pa[i*3+2]=(M.random()-.7)*25}
+pe.setAttribute('position',new THREE.BufferAttribute(pa,3));S.add(new THREE.Points(pe,new THREE.PointsMaterial({color:0xc3243d,size:.28})));
+var ax=-100;
+var bgD=tex(cv(2,256,function(x,w,h){var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#6f5a96');g.addColorStop(.45,'#c88aa6');g.addColorStop(.7,'#f0b8a8');g.addColorStop(1,'#3a2a30');x.fillStyle=g;x.fillRect(0,0,w,h)}));
+plane(300,300,tex(cv(4,4,function(x){x.fillStyle='#1f3016';x.fillRect(0,0,4,4)})),ax,-.01,-60,-M.PI/2);plane(6,130,tex(cv(4,4,function(x){x.fillStyle='#d9cfa8';x.fillRect(0,0,4,4)})),ax,.01,-45,-M.PI/2);
+for(var k=0;k<8;k++){[-7,7].forEach(function(q){box(2.5,2.2,10,0x1c3a14,ax+q,1.1,8-k*14)});[-4,4].forEach(function(q){cyl(.08,.08,3,0x222222,ax+q,1.5,14-k*10);sph(.25,0xfff0c4,ax+q,3.1,14-k*10,'e')})}
+plane(60,10,fac,ax,5,-70).material.side=2;box(60,3,6,0x3a3438,ax,11,-70);box(14,13,6,0xd6c4a0,ax,6.5,-68);box(8,4,5,0x3a3438,ax,14.5,-68);
+cyl(3,3.3,.5,0xe8d9b8,ax,.25,-40);cyl(.35,.5,2.4,0xe8d9b8,ax,1.5,-40);cyl(1.6,.5,.35,0xe8d9b8,ax,2.7,-40);light(0xffc890,1,ax,8,0);
+var sg=new THREE.BufferGeometry(),sa=new Float32Array(360);for(var i=0;i<120;i++){sa[i*3]=ax+(M.random()-.5)*160;sa[i*3+1]=25+M.random()*40;sa[i*3+2]=-30-M.random()*80}
+sg.setAttribute('position',new THREE.BufferAttribute(sa,3));S.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xffffff,size:1.1})));
+/* state & camera */
+var ending=false,tp=new THREE.Vector3(ax,2.6,16),tl=new THREE.Vector3(ax,7,-60),cl=new THREE.Vector3(ax,7,-60),px=0,py=0;
+cam.position.copy(tp);
+addEventListener('pointermove',function(e){px=(e.clientX/W-.5);py=-(e.clientY/H-.5)});
+var T=["The Arrival","The Grand Entrance","The Royal Gallery","The Grand Ballroom","The Rose Garden"],cur=0,sub=0;
+var memo=[["Our first chat","9:41 PM","It started with one message, and I have been smiling ever since."],["A quiet evening","10:12 PM","Some of our best evenings happen through a screen. They still count."],["Little moments","Anytime","The small things with you turn into memories I keep."],["Your laughter","11:20 PM","I could listen to it all night and never get tired."],["Just us","Sunday","Plans don't matter when I am with you."],["Always","Today","Every memory so far has made me want a hundred more."]];
+var gard=[["The Rose Garden","Walk with me, Madam Sahiba.",[gx,3,16],[gx,4,-30]],["","Water sings for you here.",[gx,3,0],[gx,3.2,-6]],["","A letter waits on the table.",[gx+7,3.4,1],[gx+7,2.3,-8]],["","For Her Royal Highness.",[gx+4,3,-1],[gx+4,2.8,-8]],["Every rose here is yours.","Happy Princess Day, Madam Sahiba.",[gx,3.5,14],[gx,6,-60]]];
+function setStop(p,l){tp.set(p[0],p[1],p[2]);tl.set(l[0],l[1],l[2])}
+function text(h,p){$('h').textContent=h;$('p').textContent=p}
+function ex(l,f){var b=$('ex');b.style.display=l?'':'none';b.textContent=l;b.onclick=f}
+function approach(){ex('');$('inv').style.opacity=0;tp.set(ax,2.8,-50);setTimeout(function(){go(1,0)},2800)}
+function openDoors(){doorOpen=true;ex('');text('Welcome...','');setTimeout(function(){tp.set(0,3.5,-8)},700);setTimeout(function(){go(1,1)},2400)}
+function view(){
+ var n=cur;S.background=n==0?bgD:bgG;ending=false;ex('');$('mid').style.display=n==0?'none':'';$('mid').className='ui'+((n==1&&sub==0)?' bot':'');$('inv').style.display=n==0?'block':'none';$('inv').style.opacity=1;
+ $('menu').style.display=(n==1&&sub==1)?'block':'none';$('card').style.display=n==2?'block':'none';
+ $('ttl').textContent=T[n].toUpperCase()+' \u00b7 0'+(n+1)+' / 05';Array.prototype.forEach.call($('bar').children,function(b,i){b.className=i<=n?'on':''});
+ $('bk').style.visibility=n==0?'hidden':'visible';$('nx').style.display=(n==0||(n==1&&sub==0)||(n==4&&sub==4))?'none':'';
+ if(n==0){setStop([ax,2.6,16],[ax,7,-60]);text('','');ex('Approach the palace',approach)}
+ if(n==1&&sub==0){setStop([0,3.5,8],[0,4,-10]);text('','The doors are waiting for you.');ex('Open the doors',openDoors)}
+ if(n==1&&sub==1){setStop([100,3.2,12],[100,7,-8]);text('Welcome, Madam Sahiba.','Your palace awaits.')}
+ if(n==2){setStop([200,5,5],[200,5.4,-14]);gm.map=tex(arts[sub]);gm.needsUpdate=true;var c=$('mc').getContext('2d');c.drawImage(arts[sub],0,0);$('mn').textContent='MEMORY 0'+(sub+1)+' / 06';$('mt').textContent=memo[sub][1];$('mx').textContent=memo[sub][2];text(memo[sub][0],'')}
+ if(n==3){setStop([300,4.5,11],[300,5.6,-2]);text('The Grand Ballroom','A little kingdom, made for one very special girl.');ex('Read the plaque',function(){$('letter').classList.add('on')})}
+ if(n==4){var g=gard[sub];setStop(g[2],g[3]);ending=sub==4;text(g[0],g[1]);if(sub==2)ex('Read the letter',function(){$('love').classList.add('on')});if(sub==3)ex('Wear the crown',selfie)}
+}
+function go(n,s){var f=$('fade');f.style.opacity=1;setTimeout(function(){cur=n;sub=s||0;if(n==1&&sub==0){doorOpen=false;doorT=0}view();cam.position.copy(tp);cl.copy(tl);f.style.opacity=0},600)}
+$('nx').onclick=function(){if(cur==1)return go(2);if(cur==2&&sub<5){sub++;return view()}if(cur==2)return go(3);if(cur==3)return go(4);if(cur==4&&sub<4){sub++;return view()}};
+$('bk').onclick=function(){if(cur==1&&sub==1){return go(1,0)}if(cur==2&&sub>0){sub--;return view()}if(cur==4&&sub>0){sub--;return view()}if(cur==2)return go(1,1);if(cur==3)return go(2,5);if(cur==4)return go(3);if(cur==1)return go(0)};
+document.querySelectorAll('#menu button').forEach(function(b){b.onclick=function(){go(+b.dataset.g)}});
+$('lx').onclick=function(){$('letter').classList.remove('on')};$('lv').onclick=function(){$('love').classList.remove('on')};
+R.domElement.addEventListener('click',function(){if(cur==1&&sub==0&&!doorOpen)openDoors()});
+setTimeout(function(){$('load').style.opacity=0;setTimeout(function(){$('load').style.display='none'},800)},2400);
+/* crowned portrait */
+function girl(){return cv(420,560,function(x,w,h){
+var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#5b3a78');g.addColorStop(1,'#f0a074');x.fillStyle=g;x.fillRect(0,0,w,h);
+x.fillStyle='#ffffffaa';for(var i=0;i<40;i++){x.beginPath();x.arc(M.random()*w,M.random()*h*.55,M.random()*1.8+.4,0,7);x.fill()}
+x.fillStyle='#1d0d12';x.beginPath();x.ellipse(210,270,120,170,0,0,7);x.fill();x.fillRect(90,270,240,250);
+x.fillStyle='#8b1d3a';x.beginPath();x.moveTo(30,560);x.quadraticCurveTo(50,410,210,395);x.quadraticCurveTo(370,410,390,560);x.fill();
+x.fillStyle='#d49a72';x.fillRect(188,335,44,75);x.beginPath();x.ellipse(210,255,78,98,0,0,7);x.fill();
+x.fillStyle='#1d0d12';x.beginPath();x.ellipse(210,200,84,62,0,M.PI,2*M.PI);x.fill();x.fillRect(126,198,16,70);x.fillRect(278,198,16,70);
+x.fillStyle='#fff';[[182,262],[238,262]].forEach(function(p){x.beginPath();x.ellipse(p[0],p[1],13,8,0,0,7);x.fill()});
+x.fillStyle='#2a1410';[[182,262],[238,262]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],6,0,7);x.fill()});
+x.lineCap='round';x.strokeStyle='#1d0d12';x.lineWidth=4;x.beginPath();x.moveTo(166,240);x.quadraticCurveTo(182,230,198,240);x.moveTo(222,240);x.quadraticCurveTo(238,230,254,240);x.stroke();
+x.strokeStyle='#b0704e';x.lineWidth=3;x.beginPath();x.moveTo(210,270);x.lineTo(206,292);x.lineTo(214,294);x.stroke();
+x.strokeStyle='#c2243d';x.lineWidth=6;x.beginPath();x.moveTo(190,312);x.quadraticCurveTo(210,328,230,312);x.stroke();
+x.fillStyle='#ff8a9a55';x.beginPath();x.arc(165,292,14,0,7);x.fill();x.beginPath();x.arc(255,292,14,0,7);x.fill();
+x.fillStyle='#f3e2b4';[[132,290],[288,290]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],7,0,7);x.fill()});
+x.strokeStyle='#f3e2b4';x.lineWidth=3;x.beginPath();x.arc(210,395,36,.2,M.PI-.2);x.stroke();
+var cg=x.createLinearGradient(0,90,0,170);cg.addColorStop(0,'#ffffff');cg.addColorStop(1,'#aab6cf');x.fillStyle=cg;x.strokeStyle='#7f8cab';x.lineWidth=3;
+x.beginPath();x.moveTo(140,172);x.lineTo(132,118);x.lineTo(168,146);x.lineTo(190,96);x.lineTo(210,140);x.lineTo(230,96);x.lineTo(252,146);x.lineTo(288,118);x.lineTo(280,172);x.closePath();x.fill();x.stroke();
+x.fillStyle='#ff6b81';x.beginPath();x.arc(210,158,8,0,7);x.fill();x.fillStyle='#fff';[[132,114],[190,92],[230,92],[288,114]].forEach(function(p){x.beginPath();x.arc(p[0],p[1],6,0,7);x.fill()});
+x.font='28px serif';x.fillText('\u2726',95,100);x.fillText('\u2726',300,80);x.font='18px serif';x.fillText('\u2726',330,150);x.fillText('\u2726',75,160)})}
+function selfie(){$('selfie').classList.add('on');$('gl').src=girl().toDataURL('image/png')}
+$('sx').onclick=function(){$('selfie').classList.remove('on')};
+/* loop */
+var tm=0;
+(function loop(){requestAnimationFrame(loop);tm+=.016;
+ if(ending)tp.z=M.max(tp.z-.03,-16);cam.position.lerp(tp,.035);cl.lerp(tl,.05);cam.lookAt(cl.x+px*3,cl.y+py*1.5,cl.z);
+ var a=doorOpen?M.min(M.PI/2.2,(doorT+=.02)):0;dl.rotation.y=-a;dr.rotation.y=a;
+ ch.rotation.y=tm*.2;cr.rotation.y=tm;
+ for(var i=0;i<50;i++){var j=i*3,v=dv[i];da[j]+=v[0]*(i%2?1:-1)*3;da[j+1]+=v[1]-.012-(da[j+1]>4?0:0);da[j+2]+=v[2];v[1]-=.003;if(da[j+1]<2.9){da[j]=gx;da[j+1]=4.2;da[j+2]=-6;v[1]=.05+M.random()*.05}}dp.attributes.position.needsUpdate=true;
+ for(var k=0;k<80;k++){pa[k*3+1]-=.03;pa[k*3]+=M.sin(tm+k)*.01;if(pa[k*3+1]<0)pa[k*3+1]=18}pe.attributes.position.needsUpdate=true;
+ R.render(S,cam)})();
+view();
+</script></body></html>
